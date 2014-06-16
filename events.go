@@ -1,0 +1,75 @@
+package main
+
+import (
+	"github.com/veandco/go-sdl2/sdl"
+	"fmt"
+	"os"
+)
+
+var winTitle string = "Go-SDL2 Events"
+var winWidth, winHeight int = 800, 600
+
+type Timer struct {
+	LastTick int
+	FPS int
+}
+
+func (t *Timer) Tick() {
+	if t.LastTick != nil
+}
+
+
+func main() {
+	var window *sdl.Window
+	var renderer *sdl.Renderer
+	var event sdl.Event
+	var running bool
+
+	window = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
+			winWidth, winHeight, sdl.WINDOW_SHOWN)
+	if window == nil {
+		fmt.Fprintf(os.Stderr, "Failed to create window: %s\n", sdl.GetError());
+		os.Exit(1);
+	}
+
+	renderer = sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
+	if renderer == nil {
+		fmt.Fprintf(os.Stderr, "Failed to create renderer: %s\n", sdl.GetError());
+		os.Exit(2);
+	}
+
+	running = true
+	for running {
+		time := sdl.GetTicks()
+		fmt.Println("Tickets: %f", time)
+		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+			switch t := event.(type) {
+			case *sdl.QuitEvent:
+				running = false
+			case *sdl.MouseMotionEvent:
+				fmt.Printf("[%d ms] MouseMotion\ttype:%d\tid:%d\tx:%d\ty:%d\txrel:%d\tyrel:%d\n",
+					   t.Timestamp, t.Type, t.Which, t.X, t.Y, t.XRel, t.YRel)
+			case *sdl.MouseButtonEvent:
+				fmt.Printf("[%d ms] MouseButton\ttype:%d\tid:%d\tx:%d\ty:%d\tbutton:%d\tstate:%d\n",
+					   t.Timestamp, t.Type, t.Which, t.X, t.Y, t.Button, t.State)
+			case *sdl.MouseWheelEvent:
+				fmt.Printf("[%d ms] MouseWheel\ttype:%d\tid:%d\tx:%d\ty:%d\n",
+					   t.Timestamp, t.Type, t.Which, t.X, t.Y)
+			case *sdl.KeyDownEvent:
+				fmt.Printf("[%d ms] KeyboardDown\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
+					   t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
+			case *sdl.KeyUpEvent:
+				if t.Keysym.Sym == 'a' {
+					fmt.Printf("You hit 'a'\n")
+				}
+				fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
+					   t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
+
+			}
+		}
+	}
+
+	renderer.Destroy()
+	window.Destroy()
+}
+

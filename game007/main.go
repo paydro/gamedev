@@ -12,7 +12,7 @@ import (
 	"runtime"
 )
 
-var windowTitle = "Game 006 - Animation"
+var windowTitle = "Game 007 - Animation"
 var screenWidth int = 640
 var screenHeight int = 480
 var FPS int = 60
